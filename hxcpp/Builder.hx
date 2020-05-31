@@ -61,7 +61,7 @@ class Builder
 
             switch(target)
             {
-               case "ios", "android", "blackberry", "tizen", "emscripten", "webos", "windows", "msvc", "linux", "mac", "mingw", "tvos":
+               case "ios", "android", "blackberry", "tizen", "emscripten", "webos", "windows", "msvc", "linux", "mac", "mingw", "tvos", "libnx":
                   defaultTarget = false;
                   if (linkStatic)
                   {
@@ -158,6 +158,9 @@ class Builder
                   //validArchs.push("armv64");
                   validArchs.set("x86", ["-Diphonesim"].concat(staticFlags) );
                   validArchs.set("x86_64", ["-Diphonesim", "-DHXCPP_M64"].concat(staticFlags) );
+
+               case "libnx":
+                  validArchs.set("arm64", ["-Dlibnx", "-DHXCPP_ARM64", "-DHXCPP_M64"].concat(staticFlags) );
 
                case "android":
 

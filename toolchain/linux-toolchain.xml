@@ -24,6 +24,15 @@
       <set name="HXCPP_AR" value="arm-linux-gnueabihf-ar" />
       <set name="HXCPP_RANLIB" value="arm-linux-gnueabihf-ranlib" />
    </section>
+   <section if="libnx">
+      <!-- TODO: portlibs -->
+      <path name="${DEVKITPRO}/devkitA64/bin/" />
+      <path name="${DEVKITPRO}/tools/bin/" />
+      <set name='CXX' value='aarch64-none-elf-g++' />
+      <set name='HXCPP_STRIP' value='aarch64-none-elf-strip' />
+      <set name='HXCPP_AR' value='aarch64-none-elf-ar' />
+      <set name='HXCPP_RANLIB' value='aarch64-none-elf-ranlib' />
+   </section>
 </section>
 
 <set name="HXCPP_CPP11" value="1" unless="HXCPP_NO_CPP11" />
@@ -41,10 +50,23 @@
   <cppflag value="-std=c++11" if="HXCPP_CPP11" />
   <flag value="-g" if="debug"/>
   <flag value="-O2" unless="debug"/>
-  <flag value="-fpic"/>
-  <flag value="-fPIC"/>
+  <section if="libnx">
+    <flag value='-march=armv8-a+crc+crypto' />
+    <flag value='-mtp=soft' />
+    <flag value='-mtune=cortex-a57' />
+    <flag value='-fPIE' />
+    <flag value='-Wall' />
+    <flag value='-D__SWITCH__' />
+    <flag value='-D__TM_GMTOFF=tm_gmtoff'/>
+    <flag value='-ffunction-sections' />
+    <flag value='-fexceptions' />
+    <flag value='-fpermissive' />
+  </section>
+  <flag value="-fpic" unless="libnx" />
+  <flag value="-fPIC" unless="libnx"/>
   <flag value="-Wno-overflow" />
   <cppflag value="-Wno-invalid-offsetof" />
+  <flag value="-I${DEVKITPRO}/libnx/include" if="libnx"/>
   <flag value="-DHX_LINUX"/>
   <flag value="-DRASPBERRYPI=RASPBERRYPI" if="rpi"/>
   <flag value="-DHXCPP_MULTI_THREADED" if="HXCPP_MULTI_THREADED"/>
@@ -72,6 +94,10 @@
   <flag value="--no-undefined" unless="HXCPP_ALLOW_UNDEFINED" />
   <flag value="-debug" if="debug"/>
   <lib name="-ldl"/>
+  <section if="libnx">
+    <flag value="-specs=switch.specs"/>
+    <lib name="-L${DEVKITPRO}/libnx/lib"/>
+  </section>
   <ext value=".dso"/>
   <outflag value="-o "/>
 </linker>
