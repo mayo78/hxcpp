@@ -128,6 +128,13 @@
       <outflag value="-o "/>
    </linker>
 
+  <linker id="static_library" exe="ar" if="linux">
+      <exe name="${HXCPP_AR}" if="HXCPP_AR" />
+      <flag value="rcs" />
+      <outflag value="-o " />
+      <ext value=".a" />
+   </linker>
+
    <linker id="exe" exe="g++" if="linux">
       <exe name="${CXX}" if="CXX" />
       <fromfile value="" if="GCC_OLD" />

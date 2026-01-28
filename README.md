@@ -3,7 +3,7 @@
 This fork of hxcpp (Based on commit ``1618253``) has all the modifications needed to compile Haxe for the Nintendo Switch.
 [Code taken from an old fork of hxcpp for the Nintendo Switch](https://github.com/retronx-team/switch-hxcpp) along with more changes in some parts of hxcpp to achieve a successful compilation for the console.
 
-To use this, check out [HaxeNXCompiler](https://github.com/Slushi-Github/HaxeNXCompiler).
+To use this, check out [HaxeNXCompiler](https://github.com/Slushi-Github/HaxeNXCompiler) or [Lime-NX](https://github.com/Slushi-Github/lime-nx).
 
 **Please note that not everything provided by HXCPP has been tested on this experimental target.**
 
