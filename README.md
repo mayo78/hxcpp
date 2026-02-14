@@ -9,6 +9,7 @@ To use this, check out [HaxeNXCompiler](https://github.com/Slushi-Github/HaxeNXC
 
 ## Current known issues
 - Socket partially supported, but not fully functional I think. IPV6 stuff and ``_hx_std_host_local`` in ``src/hx/libs/std/Socket.cpp`` (perhaps related to ``sys.net.Host.localhost``?) are not supported.
+ * maybe similar issue with SQLite
 
 - CFFI requires an implementation for this target.
 

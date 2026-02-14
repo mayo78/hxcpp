@@ -11,6 +11,9 @@
 
   <compilerflag value="-I${SQLITE_DIR}"/>
 
+  <compilerflag value="-DSQLITE_OMIT_WAL" if="nx"/>
+  <compilerflag value="-DSQLITE_OMIT_LOAD_EXTENSION" if="nx"/>
+
   <file name="Sqlite.cpp"/>
 
   <depend name="${SQLITE_DIR}/sqlite3.h" />
