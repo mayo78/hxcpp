@@ -581,6 +581,7 @@ class BuildTool
                   Log.lock();
                   Log.println("");
                   Log.info("\x1b[33;1mCompiling group: " + group.mId + " (" + to_be_compiled.length + " file" + (to_be_compiled.length==1 ? "" : "s") + ")\x1b[0m");
+                  Log.info("\x1b[33;1mCompiling group: " + group.mId + " (" + to_be_compiled.length + " file" + (to_be_compiled.length==1 ? "" : "s") + ")\x1b[0m");
                   var message = "\x1b[1m" + (nvcc ? getNvcc() : mCompiler.mExe) + "\x1b[0m";
                   var flags = group.mCompilerFlags;
                   if (!nvcc)
@@ -624,6 +625,7 @@ class BuildTool
          if (threadPool==null)
          {
             for(file in to_be_compiled)
+               mCompiler.compile(file,-1,groupHeader,pchStamp,compile_progress);
                mCompiler.compile(file,-1,groupHeader,pchStamp,compile_progress);
          }
          else
@@ -1989,6 +1991,17 @@ class BuildTool
          defines.set("applewatch","applewatch");
          defines.set("apple","apple");
          defines.set("BINDIR","watchsimulator");
+      }
+
+      else if (defines.exists("nx"))
+      {
+         defines.set("toolchain", "linux");
+         defines.set("xcompile", "1");
+         defines.set("linux","linux");
+         defines.set("HXCPP_LINUX_ARM64", "1");
+         defines.set("HXCPP_NO_M32", "1");
+         defines.set("BINDIR","Switch");
+         Log.println("Using toolchain for Nintendo Switch");
       }
 
       else if (defines.exists("android"))

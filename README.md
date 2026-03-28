@@ -1,30 +1,26 @@
-# hxcpp
+# hxcpp (Nintendo Switch support)
 
-[![Build Status](https://dev.azure.com/HaxeFoundation/GitHubPublic/_apis/build/status/HaxeFoundation.hxcpp?branchName=master)](https://dev.azure.com/HaxeFoundation/GitHubPublic/_build/latest?definitionId=3&branchName=master)
+This fork of hxcpp (Based on commit ``1618253``) has all the modifications needed to compile Haxe for the Nintendo Switch.
+[Code taken from an old fork of hxcpp for the Nintendo Switch](https://github.com/retronx-team/switch-hxcpp) along with more changes in some parts of hxcpp to achieve a successful compilation for the console.
 
-hxcpp is the runtime support for the c++ backend of the [haxe](http://haxe.org/) compiler. This contains the headers, libraries and support code required to generate a fully compiled executable from haxe code.
+To use this, check out [HaxeNXCompiler](https://github.com/Slushi-Github/HaxeNXCompiler) or [Lime-NX](https://github.com/Slushi-Github/lime-nx).
 
+**Please note that not everything provided by HXCPP has been tested on this experimental target.**
 
-# building the tools
+## Current known issues
+- Socket partially supported, but not fully functional I think. IPV6 stuff and ``_hx_std_host_local`` in ``src/hx/libs/std/Socket.cpp`` (perhaps related to ``sys.net.Host.localhost``?) are not supported.
+ * maybe similar issue with SQLite
 
-```
-REPO=$(pwd)
-cd ${REPO}/tools/run
-haxe compile.hxml
-cd ${REPO}/tools/hxcpp
-haxe compile.hxml
-cd $REPO
-```
+- CFFI requires an implementation for this target.
 
-# cppia
+- **(CRITICAL)** There appears to be a problem when the program ends that prevents it from releasing all the memory correctly, causing a crash.
 
-You first need to build the cppia host.
+## Important Changes
 
-```
-REPO=$(pwd)
-cd ${REPO}/project
-haxe compile-cppia.hxml
-cd $REPO
-```
+``sys.io.Process`` has been limited in this target, not due to compilation issues, but rather due to logic issues.
 
-Then you can do `haxelib run hxcpp file.cppia`.
+# Special Thanks
+
+- [RetroNX Team](https://github.com/retronx-team) for the original work for use hxcpp on the Nintendo Switch.
+
+- CRobes (On Discord) for helping me by telling me that I had to modify ``_hx_ssl_cert_load_defaults`` in ``src/hx/libs/ssl/SSL.cpp`` to support things like HTTPS requests in this target.

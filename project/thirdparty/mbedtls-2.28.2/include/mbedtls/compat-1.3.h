@@ -1962,7 +1962,9 @@
 #define gcm_update mbedtls_gcm_update
 #define get_timer mbedtls_timing_get_timer
 #define hardclock mbedtls_timing_hardclock
+#if !defined(__NX__)
 #define hardclock_poll mbedtls_hardclock_poll
+#endif
 #define havege_free mbedtls_havege_free
 #define havege_init mbedtls_havege_init
 #define havege_poll mbedtls_havege_poll
@@ -2176,7 +2178,9 @@
 #define pkcs5_pbes2 mbedtls_pkcs5_pbes2
 #define pkcs5_pbkdf2_hmac mbedtls_pkcs5_pbkdf2_hmac
 #define pkcs5_self_test mbedtls_pkcs5_self_test
+#if !defined(__NX__)
 #define platform_entropy_poll mbedtls_platform_entropy_poll
+#endif
 #define platform_set_exit mbedtls_platform_set_exit
 #define platform_set_fprintf mbedtls_platform_set_fprintf
 #define platform_set_printf mbedtls_platform_set_printf

@@ -10,6 +10,13 @@ import neko.vm.Mutex;
 #end
 
 using StringTools;
+#if haxe4
+import sys.thread.Mutex;
+#elseif cpp
+import cpp.vm.Mutex;
+#else
+import neko.vm.Mutex;
+#end
 
 private class FlagInfo
 {

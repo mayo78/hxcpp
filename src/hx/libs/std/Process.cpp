@@ -11,7 +11,7 @@
 #   include <memory.h>
 #   include <errno.h>
 #   include <signal.h>
-#   if defined(ANDROID) || defined(BLACKBERRY) || defined(EMSCRIPTEN)
+#   if defined(ANDROID) || defined(BLACKBERRY) || defined(EMSCRIPTEN) || defined(HX_NX)
 #      include <sys/wait.h>
 #   elif !defined(NEKO_MAC)
 #      include <wait.h>
@@ -102,10 +102,14 @@ struct vprocess : public hx::Object
 
 vprocess *getProcess(Dynamic handle)
 {
+ #if defined(HX_NX)
+   return null();
+ #else
    vprocess *p = dynamic_cast<vprocess *>(handle.mPtr);
    if (!p)
       hx::Throw(HX_CSTRING("Invalid process"));
    return p;
+ #endif
 }
 
 
@@ -190,7 +194,7 @@ static String quoteString(String v)
 **/
 Dynamic _hx_std_process_run( String cmd, Array<String> vargs, int inShowParam )
 {
-   #if defined(APPLETV) || defined(HX_APPLEWATCH)
+   #if defined(APPLETV) || defined(HX_APPLEWATCH) || defined(HX_NX)
    return null();
 
    #else
@@ -347,6 +351,11 @@ Dynamic _hx_std_process_run( String cmd, Array<String> vargs, int inShowParam )
 **/
 int _hx_std_process_stdout_read( Dynamic handle, Array<unsigned char> buf, int pos, int len )
 {
+
+   #if defined(HX_NX)
+      return 0;
+   #else
+
    if( pos < 0 || len < 0 || pos + len > buf->length )
       return 0;
    vprocess *p = getProcess(handle);
@@ -365,6 +374,7 @@ int _hx_std_process_stdout_read( Dynamic handle, Array<unsigned char> buf, int p
 
    hx::ExitGCFreeZone();
    return nbytes;
+   #endif
 }
 
 
@@ -378,6 +388,10 @@ int _hx_std_process_stdout_read( Dynamic handle, Array<unsigned char> buf, int p
 **/
 int _hx_std_process_stderr_read( Dynamic handle, Array<unsigned char> buf, int pos, int len )
 {
+   #if defined(HX_NX)
+      return 0;
+   #else
+
    if( pos < 0 || len < 0 || pos + len > buf->length )
       return 0;
    vprocess *p = getProcess(handle);
@@ -396,6 +410,7 @@ int _hx_std_process_stderr_read( Dynamic handle, Array<unsigned char> buf, int p
 
    hx::ExitGCFreeZone();
    return nbytes;
+   #endif
 }
 
 /**
@@ -408,6 +423,10 @@ int _hx_std_process_stderr_read( Dynamic handle, Array<unsigned char> buf, int p
 **/
 int _hx_std_process_stdin_write( Dynamic handle, Array<unsigned char> buf, int pos, int len )
 {
+   #if defined(HX_NX)
+      return 0;
+   #else
+
    if( pos < 0 || len < 0 || pos + len > buf->length )
       return 0;
    vprocess *p = getProcess(handle);
@@ -428,6 +447,7 @@ int _hx_std_process_stdin_write( Dynamic handle, Array<unsigned char> buf, int p
 
    hx::ExitGCFreeZone();
    return nbytes;
+   #endif
 }
 
 /**
@@ -438,6 +458,11 @@ int _hx_std_process_stdin_write( Dynamic handle, Array<unsigned char> buf, int p
 **/
 void _hx_std_process_stdin_close( Dynamic handle )
 {
+
+   #if defined(HX_NX)
+      return;
+   #else
+
    vprocess *p = getProcess(handle);
 
    #ifdef NEKO_WINDOWS
@@ -448,6 +473,7 @@ void _hx_std_process_stdin_close( Dynamic handle )
       do_close(p->iwrite);
    #endif
    p->iwrite = HANDLE_INIT;
+   #endif
 }
 
 /**
@@ -459,6 +485,11 @@ void _hx_std_process_stdin_close( Dynamic handle )
 #if (HXCPP_API_LEVEL > 420)
 Dynamic _hx_std_process_exit( Dynamic handle, bool block )
 {
+
+   #if defined(HX_NX)
+      return null();
+   #else
+
    vprocess *p = getProcess(handle);
 
    hx::EnterGCFreeZone();
@@ -506,14 +537,20 @@ Dynamic _hx_std_process_exit( Dynamic handle, bool block )
 
    return WEXITSTATUS(rval);
    #endif
+   #endif
 }
 #else
 int _hx_std_process_exit( Dynamic handle )
 {
+
+#if defined(HX_NX)
+   return 0;
+#else
+
    vprocess *p = getProcess(handle);
 
    hx::EnterGCFreeZone();
-   #ifdef NEKO_WINDOWS
+#ifdef NEKO_WINDOWS
    {
       DWORD rval;
       WaitForSingleObject(p->pinf.hProcess,INFINITE);
@@ -523,7 +560,7 @@ int _hx_std_process_exit( Dynamic handle )
          return 0;
       return rval;
    }
-   #else
+#else
    int rval=0;
    while( waitpid(p->pid,&rval,0) != p->pid )
    {
@@ -537,7 +574,8 @@ int _hx_std_process_exit( Dynamic handle )
       return 0;
 
    return WEXITSTATUS(rval);
-   #endif
+#endif
+#endif
 }
 #endif
 
@@ -549,24 +587,34 @@ int _hx_std_process_exit( Dynamic handle )
 **/
 int _hx_std_process_pid( Dynamic handle )
 {
+#if defined(HX_NX)
+   return 0;
+#else
+
    vprocess *p = getProcess(handle);
 
-   #ifdef NEKO_WINDOWS
+#ifdef NEKO_WINDOWS
    return p->pinf.dwProcessId;
-   #else
+#else
    return p->pid;
-   #endif
+#endif
+#endif
 }
 
 void _hx_std_process_kill( Dynamic handle )
 {
+#if defined(HX_NX)
+   return;
+#else
+
    vprocess *p = getProcess(handle);
 
-   #ifdef NEKO_WINDOWS
+#ifdef NEKO_WINDOWS
    TerminateProcess(p->pinf.hProcess, -1);
-   #else
+#else
    kill(p->pid, SIGTERM);
-   #endif
+#endif
+#endif
 }
 
 

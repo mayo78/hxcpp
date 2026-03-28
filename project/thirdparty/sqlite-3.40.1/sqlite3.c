@@ -37144,14 +37144,14 @@ static struct unix_syscall {
   { "rmdir",        (sqlite3_syscall_ptr)rmdir,           0 },
 #define osRmdir     ((int(*)(const char*))aSyscall[19].pCurrent)
 
-#if defined(HAVE_FCHOWN)
+#if defined(HAVE_FCHOWN) && !defined(__NX__)
   { "fchown",       (sqlite3_syscall_ptr)fchown,          0 },
 #else
   { "fchown",       (sqlite3_syscall_ptr)0,               0 },
 #endif
 #define osFchown    ((int(*)(int,uid_t,gid_t))aSyscall[20].pCurrent)
 
-#if defined(HAVE_FCHOWN)
+#if defined(HAVE_FCHOWN) && !defined(__NX__)
   { "geteuid",      (sqlite3_syscall_ptr)geteuid,         0 },
 #else
   { "geteuid",      (sqlite3_syscall_ptr)0,               0 },
